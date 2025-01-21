@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+button {
+    margin: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+#mainContent {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+
+.hospital {
+    width: 150px; 
+    height: 150px; 
+    background-color: #f0f0f0;
+    border: 2px solid #4CAF50; 
+    margin: 10px;
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    position: relative; 
+}
+
+.hospital h3 {
+    position: absolute;
+}
+
+.department {
+    width: 80px; 
+    height: 80px; 
+    background-color: #2196F3;
+    border-radius: 50%;
+    margin: 5px; 
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    color: white;
+}
