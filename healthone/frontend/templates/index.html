@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hospital</title>
-    <link rel="stylesheet" href="../static/css/style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Hospital Directory</title>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+        <link rel="stylesheet" href="../static/css/style.css">
+    </head>
 <body>
-<header>
-    <h1>Hospital</h1>
-    <button id="hospitalBtn">Hospitals</button>
-    <button id="departmentBtn">Departments</button>
-</header>
+    <header>
+        <h1>Hospital Directory</h1>
+        <div class="button-group">
+            <button id="hospitalBtn" class="active">Hospitals</button>
+            <button id="departmentBtn">Departments</button>
+        </div>
+    </header>
 
-<main id="mainContent"></main>
+    <button id="backBtn" class="back-button">← Back</button>
+    <main id="mainContent"></main>
 
-<div id="mapModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <div id="popupMap"></div>
-    </div>
-</div>
+    
+{% comment %} 
+    <div id="mapModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="popupMap"></div>
+        </div>
+    </div>  {% endcomment %}
+
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="../static/js/script.js"></script>
