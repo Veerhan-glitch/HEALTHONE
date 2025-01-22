@@ -353,18 +353,10 @@ function showHospitals() {
 }
 
 function showMapPopup(lat, lng, name) {
-    const modal = document.createElement('div');
-    modal.id = 'mapModal';
-    modal.className = 'modal';
-    
-    modal.innerHTML = `
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div id="popupMap" style="height: 400px;"></div>
-        </div>
-    `;
+    const modal = document.getElementById('mapModal');
+    const closeBtn = document.querySelector('.close');
 
-    document.body.appendChild(modal);
+    modal.style.display = 'block';
 
     const map = L.map('popupMap').setView([lat, lng], 15);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -373,14 +365,15 @@ function showMapPopup(lat, lng, name) {
 
     L.marker([lat, lng]).addTo(map).bindPopup(name).openPopup();
 
-    const closeBtn = modal.querySelector('.close');
     closeBtn.onclick = () => {
-        modal.remove();
+        modal.style.display = 'none';
+        map.remove(); 
     };
 
     window.onclick = (event) => {
         if (event.target === modal) {
-            modal.remove();
+            modal.style.display = 'none';
+            map.remove();
         }
     };
 }
@@ -450,7 +443,22 @@ function showHospitalsForDepartment(departmentName) {
             const hospitalName = document.createElement('h3');
             hospitalName.textContent = hospital.name;
 
+            const mapIconContainer = document.createElement('div');
+            mapIconContainer.className = 'map-icon-container';
+    
+            const mapIcon = document.createElement('i');
+            mapIcon.className = 'fa-solid fa-map-location-dot map-icon';
+
+            mapIcon.onclick = (event) => {
+                event.stopPropagation();
+                if (hospital.lat && hospital.lng) {
+                    showMapPopup(hospital.lat, hospital.lng, hospital.name);
+                }
+            };
+
+            mapIconContainer.appendChild(mapIcon);
             hospitalDiv.appendChild(hospitalName);
+            hospitalDiv.appendChild(mapIconContainer);
             
             hospitalDiv.onclick = () => showDoctors(hospital.name, departmentName);
             

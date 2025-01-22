@@ -298,13 +298,26 @@ button.active {
 }
 
 .modal {
+    display: flex;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 0;
+}
+
+.mapmodalclass {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 0;
@@ -312,6 +325,7 @@ button.active {
 
 .modal-content {
     background-color: white;
+    margin: 10% auto;
     padding: 30px;
     border-radius: 15px;
     width: 90%;
