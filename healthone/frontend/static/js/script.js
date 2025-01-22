@@ -38,7 +38,7 @@ const hospitals = [
         ]
     },
     {
-        name: "Aplo",
+        name: "Apolo",
         departments: [
             {
                 department: departments[0], // Cardiology
