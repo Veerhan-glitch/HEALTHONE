@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthLabs</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />  <!-- Map include -->  
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="https://images.unsplash.com/photo-1530695809363-afa2f7a35084?w=294&dpr=2&h=294&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxjb2xsZWN0aW9uLXRodW1ibmFpbHx8ODc0NjQzNnx8ZW58MHx8fHx8" alt="Logo">
+                <h1>HealthLabs</h1>
+            </div>
+            <div class="nav-links">
+                <button id="findLabBtn">Find Labs Near You</button>
+            </div>
+        </nav>
+    </header>
+
+    
+    <main>
+        <section class="hero">
+            <div class="search-container">
+                <input type="text" id="searchTests" placeholder="Search for tests...">
+                <button id="searchBtn">Search</button>
+            </div>
+        </section>
+
+        <section class="categories">
+            <h2>Test Categories</h2>
+            <div class="category-list">
+                <button class="category-btn active" data-category="all">All Tests</button>
+                <button class="category-btn" data-category="blood">Blood Tests</button>
+                <button class="category-btn" data-category="diabetes">Diabetes</button>
+                <button class="category-btn" data-category="thyroid">Thyroid</button>
+                <button class="category-btn" data-category="cardiac">Cardiac</button>
+            </div>
+        </section>
+
+        <section class="tests-container">
+            <div class="tests-list" id="testsList">
+              
+            </div>
+        </section>
+    </main>
+
+    <!-- Test Details Modal -->
+    <div id="testModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="testDetails">
+                <!-- Test details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Location Search Modal -->
+    <div id="locationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Find Labs Near You</h2>
+            <input type="text" id="locationSearch" placeholder="Enter your location">
+            <div id="map"></div>
+            <div id="labsList"></div>
+        </div>
+    </div>
+
+    <!-- Appointment Booking Modal -->
+    <div id="appointmentModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Book Your Appointment</h2>
+            
+            <div class="appointment-details">
+                <div class="calendar-section">
+                    <h3>Select Date</h3>
+                    <input type="date" id="appointmentDate" required>
+                </div>
+
+                <div class="time-slots">
+                    <h3>Available Time Slots</h3>
+                    <div class="slot-container">
+                        <div class="morning-slots">
+                            <h4>Morning</h4>
+                            <div class="slots">
+                                <button class="time-slot">09:00 AM</button>
+                                <button class="time-slot">10:00 AM</button>
+                                <button class="time-slot">11:00 AM</button>
+                            </div>
+                        </div>
+                        <div class="evening-slots">
+                            <h4>Evening</h4>
+                            <div class="slots">
+                                <button class="time-slot">04:00 PM</button>
+                                <button class="time-slot">05:00 PM</button>
+                                <button class="time-slot">06:00 PM</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="test-summary">
+                    <h3>Test Summary</h3>
+                    <div id="selectedTestDetails"></div>
+                </div>
+
+                <form id="appointmentForm" class="appointment-form">
+                    <h3>Personal Details</h3>
+                    <div class="form-group">
+                        <input type="text" id="fullName" placeholder="Full Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="phone" placeholder="Phone Number" pattern="[0-9]{10}" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="address" placeholder="Home Address" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Confirm Booking</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="../static/js/script.js"></script>
+</body>
+</html>
