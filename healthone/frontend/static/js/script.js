@@ -457,7 +457,7 @@ function showHospitalsForDepartment(departmentName) {
             };
 
             mapIconContainer.appendChild(mapIcon);
-            hospitalDiv.appendChild(hospitalName);
+            hospitalDiv.appendChild(hospitalName);sgsdbdageg
             hospitalDiv.appendChild(mapIconContainer);
             
             hospitalDiv.onclick = () => showDoctors(hospital.name, departmentName);
