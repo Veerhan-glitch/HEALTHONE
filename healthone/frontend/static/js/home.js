@@ -75,7 +75,7 @@ Promise.all(datasets.map(dataset => {
         };
     });
 })).then(() => {
-    new Chart(ctx, {
+    window.chart = new Chart(ctx, {
         type: 'line',
         data: { datasets: datasets },
         options: {
@@ -116,6 +116,23 @@ Promise.all(datasets.map(dataset => {
         }
     });
 });
+document.getElementById('lineChart').onclick = function (evt) {
+    console.log("Chart clicked!"); // Debugging log
+
+    const points = window.chart.getElementsAtEventForMode(evt, 'nearest', { intersect: false }, true);
+    console.log("Points:", points); // Log what is detected
+
+    if (points.length) {
+        const datasetIndex = points[0].datasetIndex;
+        const dataset = window.chart.data.datasets[datasetIndex];
+        const doctorName = dataset.label.split(',')[0];
+
+        console.log("Doctor selected:", doctorName); // Debugging log
+        showAppointmentModal(doctorName);
+    } else {
+        console.log("No points detected! Try clicking on the dots."); // Debugging log
+    }
+};
 
 // Hospital Success Rate Section
 const hospitals = [
@@ -177,3 +194,8 @@ document.addEventListener('DOMContentLoaded', () => {
     createHospitalCards();
     initializeSearch();
 });
+
+
+
+
+
