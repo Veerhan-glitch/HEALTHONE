@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Line Graph with Images</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="lineChart"></canvas>
+    <script>
+        const ctx = document.getElementById('lineChart').getContext('2d');
+        const years = ["2018", "2019", "2020", "2021", "2022"];
+        const datasets = [
+            {
+                label: 'Dr. Smith, Cardiologist',
+                data: [3, 12, 20, 28, 38],
+                borderColor: 'red',
+                borderWidth: 2,
+                pointRadius: 0,
+                pointHoverRadius: 0,
+                images: '1.jpeg'
+            },
+            {
+                label: 'Dr. Johnson, Neurologist',
+                data: [8, 18, 25, 33, 45],
+                borderColor: 'blue',
+                borderWidth: 2,
+                pointRadius: 0,
+                pointHoverRadius: 0,
+                images: '2.jpeg'
+            },
+            {
+                label: 'Dr. Lee, Orthopedic',
+                data: [6, 14, 22, 31, 40],
+                borderColor: 'green',
+                borderWidth: 2,
+                pointRadius: 0,
+                pointHoverRadius: 0,
+                images: '3.jpeg'
+            },
+            {
+                label: 'Dr. Brown, Dermatologist',
+                data: [2, 10, 21, 29, 37],
+                borderColor: 'orange',
+                borderWidth: 2,
+                pointRadius: 0,
+                pointHoverRadius: 0,
+                images: '4.jpeg'
+            },
+            {
+                label: 'Dr. Williams, Oncologist',
+                data: [4, 13, 23, 32, 42],
+                borderColor: 'purple',
+                borderWidth: 2,
+                pointRadius: 0,
+                pointHoverRadius: 0,
+                images: '5.jpeg'
+            }
+        ];
+
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: years,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        enabled: true,
+                        mode: 'nearest',
+                        intersect: false,
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                return tooltipItems[0].dataset.label;
+                            },
+                            label: function() {
+                                return '';
+                            }
+                        }
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    intersect: false
+                },
+                animation: {
+                    onComplete: function() {
+                        const chartInstance = this;
+                        const ctx = chartInstance.ctx;
+                        datasets.forEach((dataset, datasetIndex) => {
+                            const meta = chartInstance.getDatasetMeta(datasetIndex);
+                            const lastPoint = meta.data[meta.data.length - 1]; // Get last point of each line
+                            const x = lastPoint.x;
+                            const y = lastPoint.y;
+                            const img = new Image();
+                            img.src = dataset.images;
+                            img.onload = function() {
+                                ctx.drawImage(img, x - 10, y - 10, 20, 20);
+                            };
+                        });
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

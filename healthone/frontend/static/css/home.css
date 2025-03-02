@@ -191,3 +191,12 @@ main {
     font-weight: bold;
     color: var(--primary-color);
 }
+
+#lineChart {
+    display: block;
+    margin: 2rem auto; 
+    max-width: 4000px;
+    max-height: 3000px;
+    width: 100%;
+    height: auto;
+}
