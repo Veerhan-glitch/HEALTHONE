@@ -11,20 +11,27 @@ class Test(models.Model):
     procedure = models.TextField(blank=True, null=True)
     side_effects = models.TextField(blank=True, null=True)
     results = models.TextField(blank=True, null=True)
-    preparation_required = models.BooleanField(default=False)
+    preparation_required = models.TextField(blank=True, null=True)
     turnaround_time = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return self.name
 
 class Lab(models.Model):
+    id = models.CharField(max_length=50, primary_key=True)
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=255, blank=True, null=True)
-    latitude = models.DecimalField(max_digits=10, decimal_places=6, blank=True, null=True)
-    longitude = models.DecimalField(max_digits=10, decimal_places=6, blank=True, null=True)
 
     def __str__(self):
         return self.name
+
+class LabTest(models.Model):
+    test = models.ForeignKey(Test, on_delete=models.CASCADE)
+    lab = models.ForeignKey(Lab, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.test.name + " at " + self.lab.name
+
 
 class Appointment(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
