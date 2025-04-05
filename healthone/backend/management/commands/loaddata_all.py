@@ -5,7 +5,7 @@ class Command(BaseCommand):
     help = 'Load all data from fixtures if they exist'
 
     def handle(self, *args, **kwargs):
-        fixture_path = 'healthone/backend/fixtures'
+        fixture_path = 'healthone/backend/fixtures/'
         fixtures = ['lab.json', 'test.json', 'labtest.json', 'appointment.json']
 
         for fixture in fixtures:
