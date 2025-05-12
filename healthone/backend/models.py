@@ -44,3 +44,5 @@ class Appointment(models.Model):
 
     def __str__(self):
         return f"{self.full_name} - {self.test.name} on {self.appointment_date}"
+
+
