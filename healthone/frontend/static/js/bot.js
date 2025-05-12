@@ -47,6 +47,41 @@ chatInput.addEventListener('keydown', (e) => {
     }
 });
 
+// display msgs in chat window
+function addMessageToChat(message, sender) {
+    // Create message container
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message', sender);
+    
+    // Create message content
+    const messageContent = document.createElement('div');
+    messageContent.classList.add('message-content');
+    
+    // Create message text
+    const messagePara = document.createElement('p');
+    if (sender === 'bot') {
+        messagePara.innerHTML = message; // allow HTML like <a>
+    } else {
+        messagePara.textContent = message; // escape user input
+    }    
+    // Create timestamp
+    const timestamp = document.createElement('span');
+    timestamp.classList.add('timestamp');
+    timestamp.textContent = getCurrentTime();
+    
+    // Assemble message
+    messageContent.appendChild(messagePara);
+    messageDiv.appendChild(messageContent);
+    messageDiv.appendChild(timestamp);
+    
+    // Add to chat
+    chatMessages.appendChild(messageDiv);
+    
+    // Scroll to bottom
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// perform prediction
 async function sendMessage() {
     const message = chatInput.value.trim();
     if (!message) return;
@@ -80,39 +115,6 @@ async function sendMessage() {
                 addMessageToChat(videoLink, 'bot');            }
         }
     }, 1000);
-}
-
-function addMessageToChat(message, sender) {
-    // Create message container
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message', sender);
-    
-    // Create message content
-    const messageContent = document.createElement('div');
-    messageContent.classList.add('message-content');
-    
-    // Create message text
-    const messagePara = document.createElement('p');
-    if (sender === 'bot') {
-        messagePara.innerHTML = message; // allow HTML like <a>
-    } else {
-        messagePara.textContent = message; // escape user input
-    }    
-    // Create timestamp
-    const timestamp = document.createElement('span');
-    timestamp.classList.add('timestamp');
-    timestamp.textContent = getCurrentTime();
-    
-    // Assemble message
-    messageContent.appendChild(messagePara);
-    messageDiv.appendChild(messageContent);
-    messageDiv.appendChild(timestamp);
-    
-    // Add to chat
-    chatMessages.appendChild(messageDiv);
-    
-    // Scroll to bottom
-    chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
 function getCurrentTime() {
@@ -271,7 +273,7 @@ function getCSRFToken() {
     return cookieValue;
 }
 
-
+// accuracy check
 function probtestFromResponse(predictions) {
     console.log(predictions);
     const b_first = predictions[0]?.disease;
@@ -296,6 +298,7 @@ function probtestFromResponse(predictions) {
     }
 }
 
+// if low acuracy
 async function askAgain(diseases) {
     askingSymp = true;
     console.log("Ask for more symptoms. Possible diseases are:", diseases.join(", "));
@@ -317,7 +320,7 @@ async function askAgain(diseases) {
     
         if (initResp.next_symptom) {
             displayFollowUp(initResp.next_symptom);
-        } else if (initResp.result) { // might be redundent, todo
+        } else if (initResp.result) {
             const videoTitle = initResp.result;
             const videoLink = `<a href="/video_detail/${encodeURIComponent(videoTitle)}/" target="_blank">${videoTitle}</a>`;
             addMessageToChat(videoLink, 'bot');
@@ -330,15 +333,11 @@ async function askAgain(diseases) {
     }
 }
   
-
 function displayFollowUp(symptom) {
-    // remember what we're asking about
     awaitingSymptom = symptom;
   
-    // show the bot's question
     addMessageToChat(`Do you have "${symptom}"?`, "bot");
     
-    // scroll into view
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 

@@ -15,6 +15,5 @@ urlpatterns = [
     path('predict/', views.predict, name='predict'),
     path('diagnosis/', diagnosis_view, name='diagnosis'),
     path('diagnosis_step/', diagnosis_step, name='diagnosis_step'),
-    path('video_list/', views.video_list, name='video_list'), # for video fetching
     path('video_detail/<str:title>/', views.video_detail, name='video_detail'), # for video page
 ]

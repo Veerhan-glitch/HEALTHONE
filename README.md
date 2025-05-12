@@ -42,3 +42,12 @@ Run the development server:
 
 python manage.py makemigrations
 python manage.py migrate
+
+
+
+TODO:
+remove redundency
+use {%static%} insted of /static
+sync db
+ctrf tokan
+proper authentication

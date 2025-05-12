@@ -22,10 +22,6 @@ def bot(request):
 def video(request):
     return render(request, 'video_detail.html')
 
-def video_list(request):
-    videos = Video.objects.all()
-    return render(request, 'video_list.html', {'videos': videos})
-
 def video_detail(request, title):
     video = Video.objects.filter(title__iexact=title).first()
     if video:
