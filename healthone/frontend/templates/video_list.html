@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>All Videos</title></head>
+<body>
+  <h1>Choose a Video</h1>
+  <ul>
+    {% for video in videos %}
+      <li>
+        <a href="{% url 'video_detail' video.title %}">{{ video.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</body>
+</html>

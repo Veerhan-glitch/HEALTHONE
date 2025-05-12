@@ -1,4 +1,16 @@
 from django.db import models
+from healthone.backend.backendstorages.filebase_storage import FilebaseStorage
+
+class Video(models.Model):
+    title = models.CharField(max_length=200)
+    file_key = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.title
+    
+    def get_presigned_url(self, expires_in=3600):
+            storage = FilebaseStorage()
+            return storage.generate_presigned_url(self.file_key, expires_in=expires_in)
 
 class Test(models.Model):
     id = models.CharField(max_length=50, primary_key=True)
