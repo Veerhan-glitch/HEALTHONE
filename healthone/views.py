@@ -4,6 +4,7 @@ from healthone.backend.models import Test, Lab, Appointment, Video
 from .serializers import TestSerializer, LabSerializer, AppointmentSerializer
 from healthone.backend.MLmodels.ml.ml_runer import predict_robust_ml  
 from healthone.backend.MLmodels.askagain import diagnosis_view, diagnosis_step # keep even if says not used as we only need import not call
+from healthone.backend.MLmodels.bert.bert_runer import predict_bert
 from django.http import JsonResponse
 from healthone.backend.backendstorages.filebase_storage import FilebaseStorage
 
@@ -45,7 +46,7 @@ class AppointmentCreate(generics.CreateAPIView):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
 
-def predict(request):
+def ml_predict(request):
     user_input = request.POST.get('input_text')
     
     if not user_input:
@@ -54,3 +55,12 @@ def predict(request):
     result = predict_robust_ml(user_input)
     return JsonResponse(result)
 
+
+def bert_predict(request):
+    user_input = request.POST.get('input_text')
+    print(user_input)
+    if not user_input:
+        return JsonResponse({"error": "Input text is required"}, status=400)
+
+    result = predict_bert(user_input)
+    return JsonResponse(result)

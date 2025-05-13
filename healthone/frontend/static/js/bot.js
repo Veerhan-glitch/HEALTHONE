@@ -100,19 +100,37 @@ async function sendMessage() {
         const response = await getBotResponse(message);
         console.log(response); // inspect response
         
-        if (response && response.predictions) {
+        if (response && response[0].predictions && response[1].predictions) {
             // result = probtestFromResponse(response.predictions) 
-            const probtestresult = probtestFromResponse(response.predictions);
+            const probtestresult = probtestFromResponse(response[0].predictions, response[1].predictions);
+            console.log(probtestresult); // inspect probtestresult
             if (probtestresult[0]) {
-                askAgain(probtestresult[1]);
+                askAgain(probtestresult[2]);
             } else {
                 let msg = "Top Predictions:\n";
-                response.predictions.forEach(p => {
+                response[0].predictions.forEach(p => {
                     msg += `${p.disease}: ${(p.probability * 100).toFixed(2)}%\n`;
                 });
-                const videoTitle = probtestresult[1];
-                const videoLink = `<a href="/video_detail/${encodeURIComponent(videoTitle)}/" target="_blank">${videoTitle}</a>`;
-                addMessageToChat(videoLink, 'bot');            }
+                response[1].predictions.forEach(p => {
+                    msg += `${p.disease}: ${(p.probability * 100).toFixed(2)}%\n`;
+                });
+                if (probtestresult[1] == 'case1' || probtestresult[1] == 'case4.1') {
+                    const videoTitle = probtestresult[2];
+                    const videoLink = `<a href="/video_detail/${encodeURIComponent(videoTitle)}/" target="_blank">${videoTitle}</a>`;
+                    addMessageToChat(videoLink, 'bot');           
+                } 
+                else if (probtestresult[1] == 'case2') {
+                    const videoTitle1 = probtestresult[2];
+                    const videoLink1 = `<a href="/video_detail/${encodeURIComponent(videoTitle1)}/" target="_blank">${videoTitle1}</a>`;
+                    const videoTitle2 = probtestresult[2];
+                    const videoLink2 = `<a href="/video_detail/${encodeURIComponent(videoTitle1)}/" target="_blank">${videoTitle2}</a>`;
+                    addMessageToChat(`Inconclusive ${videoLink1} or ${videoLink2}`, 'bot');                    
+                } 
+                else {
+                    const videoLink = `<a href="/video_detail/${encodeURIComponent(empty)}/" target="_blank">Link to our Video website</a>`;
+                    addMessageToChat(`${probtestresult[2]}, ${videoLink}`, 'bot'); 
+                }
+            }
         }
     }, 1000);
 }
@@ -229,7 +247,7 @@ document.addEventListener('click', (e) => {
 
 async function getPrediction(inputText) {
     try {
-        const response = await fetch("/predict/", {
+        const response1 = await fetch("/ml_predict/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -237,14 +255,26 @@ async function getPrediction(inputText) {
             },
             body: new URLSearchParams({ input_text: inputText }),
         });
+        const result1 = await response1.json();
 
-        const result = await response.json();
+        const response2 = await fetch("/bert_predict/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": getCSRFToken(),  // Ensure CSRF protection
+            },
+            body: new URLSearchParams({ input_text: inputText }),
+        });
+        const result2 = await response2.json();
 
-        if (result.error) {
-            console.error("Error:", result.error);
+        if (result1.error) {
+            console.error("Error:", result1.error);
+        }
+        if (result2.error) {
+            console.error("Error:", result2.error);
         }
         
-        return result;
+        return [result1, result2];
     } catch (error) {
         console.error("Fetch error:", error);
         return { error: "Failed to fetch prediction" };
@@ -274,28 +304,112 @@ function getCSRFToken() {
 }
 
 // accuracy check
-function probtestFromResponse(predictions) {
-    console.log(predictions);
-    const b_first = predictions[0]?.disease;
-    const b_prob1 = predictions[0]?.probability;
-    const b_second = predictions[1]?.disease;
-    const b_prob2 = predictions[1]?.probability;
-    const b_third = predictions[2]?.disease;
-    const b_prob3 = predictions[2]?.probability;
+function probtestFromResponse(predictions1, predictions2) {
+    console.log(predictions1);
+    const b_first1 = predictions1[0]?.disease;
+    const b_prob11 = predictions1[0]?.probability;
+    const b_second1 = predictions1[1]?.disease;
+    const b_prob21 = predictions1[1]?.probability;
+    const b_third1 = predictions1[2]?.disease;
+    const b_prob31 = predictions1[2]?.probability;
 
     // Log the extracted values for debugging
-    console.log(`First: ${b_first}, Probability: ${b_prob1}`);
-    console.log(`Second: ${b_second}, Probability: ${b_prob2}`);
-    console.log(`Third: ${b_third}, Probability: ${b_prob3}`);
+    console.log(`First: ${b_first1}, Probability: ${b_prob11}`);
+    console.log(`Second: ${b_second1}, Probability: ${b_prob21}`);
+    console.log(`Third: ${b_third1}, Probability: ${b_prob31}`);
 
-    if (b_first === "Unknown") {
-        return [false, `No disease identified`];
-    } else if (b_prob1 >= 0.80) {
-        return [false, `${b_first}`];
+    console.log(predictions2);
+    const b_first2 = predictions2[0]?.disease;
+    const b_prob12 = predictions2[0]?.probability;
+    const b_second2 = predictions2[1]?.disease;
+    const b_prob22 = predictions2[1]?.probability;
+    const b_third2 = predictions2[2]?.disease;
+    const b_prob32 = predictions2[2]?.probability;
+
+    // Log the extracted values for debugging
+    console.log(`First: ${b_first2}, Probability: ${b_prob12}`);
+    console.log(`Second: ${b_second2}, Probability: ${b_prob22}`);
+    console.log(`Third: ${b_third2}, Probability: ${b_prob32}`);
+
+    if (b_first1 == b_first2 && b_prob11 >= 0.80 && b_prob12 >= 0.80) {
+        return [false, 'case1', `${b_first1}`]; // both top is same and confedent
+    } else if (b_prob11 >= 0.80 && b_prob12 >= 0.80) {// both top is dif and confedent
+        return [false, 'case2', `${b_first1}`, `${b_first2}`];
+    } else if (
+        (b_prob11 >= 0.80 && (b_first1 !== b_second2 && b_first1 !== b_third2)) ||
+        (b_prob12 >= 0.80 && (b_first2 !== b_second1 && b_first2 !== b_third1))
+    ) {
+        // Collect the diseases and probabilities from the top 3 of both models
+        const diseases_data1 = [
+            { disease: b_first1, probability: b_prob11 },
+            { disease: b_second1, probability: b_prob21 },
+            { disease: b_third1, probability: b_prob31 }
+        ];
+    
+        const diseases_data2 = [
+            { disease: b_first2, probability: b_prob12 },
+            { disease: b_second2, probability: b_prob22 },
+            { disease: b_third2, probability: b_prob32 }
+        ];
+    
+        // Combine the results from both models
+        const combined_data = [...diseases_data1, ...diseases_data2];
+    
+        // Sort the combined data by probability in descending order
+        const sorted_diseases = combined_data.sort((a, b) => b.probability - a.probability);
+    
+        // Extract only the disease names from the top 3
+        const top3_disease_names = sorted_diseases.slice(0, 3).map(item => item.disease);
+
+        return [true, 'case3', top3_disease_names];
     } else {
-        const diseases_data = [b_first, b_second, b_third];
-        return [true, diseases_data];
+        const find_common_disease = (base_data, bert_data) => {
+            // Iterate through the top 3 predictions from both models
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    if (base_data[i].disease === bert_data[j].disease) {
+                        return {
+                            disease: base_data[i].disease,
+                            p1: base_data[i].probability,
+                            p2: bert_data[j].probability
+                        };
+                    }
+                }
+            }
+            return null; // No common disease
+        };
+    
+        const base_data = [
+            { disease: b_first1, probability: b_prob11 },
+            { disease: b_second1, probability: b_prob21 },
+            { disease: b_third1, probability: b_prob31 }
+        ];
+    
+        const bert_data = [
+            { disease: b_first2, probability: b_prob12 },
+            { disease: b_second2, probability: b_prob22 },
+            { disease: b_third2, probability: b_prob32 }
+        ];
+    
+        const common = find_common_disease(base_data, bert_data);
+        
+        if (common && (common.p1 + common.p2) >= 1.2) {
+            return [false, 'case4.1', `${common.disease}`];
+        } else if (b_prob11 < 0.50 && b_prob12 < 0.50) {
+            return [false, 'case4.2', 'No result (Low confidence)'];
+        } else {
+            return [false, 'case4.2', 'Needs manual review'];
+        }
     }
+
+    // if (b_first1 === "Unknown") {
+    //     return [false, `No disease identified`];
+    // } else if (b_prob1 >= 0.80) {
+    //     return [false, `${b_first}`];
+    // } else {
+    //     const diseases_data = [b_first, b_second, b_third];
+    //     return [true, diseases_data];
+    // }
 }
 
 // if low acuracy
@@ -367,7 +481,7 @@ async function submitAnswer(symptom, answer) {
             askingSymp = false;
         }
         
-        return resp;
+        return [resp];
     } catch (error) {
         console.error("Error in submitAnswer:", error);
         addMessageToChat("Sorry, there was an error processing your response.", "bot");
