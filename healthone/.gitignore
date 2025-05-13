@@ -1,0 +1,118 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Django stuff
+*.log
+db.sqlite3
+local_settings.py
+media/
+staticfiles/
+static_root/
+
+# Environment files
+.env
+.env.*
+
+# Virtual environments
+venv/
+venv310/
+ENV/
+env/
+.venv/
+.venv310/
+
+# Python distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Django cache/migrations
+**/migrations/**/__pycache__/
+**/migrations/*.pyc
+**/migrations/*.pyo
+**/migrations/*.pyd
+
+# IDEs
+.vscode/
+.idea/
+
+# Jupyter notebooks
+.ipynb_checkpoints
+
+# Coverage / test
+.coverage
+.tox/
+.nox/
+.pytest_cache/
+htmlcov/
+
+# Lint/mypy
+.mypy_cache/
+.dmypy.json
+.pytype/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Frontend cache
+**/static/js/*
+**/static/css/*
+**/static/image/*
+**/frontend/static/*
+
+# BERT / ML models / checkpoints / large data
+*.h5
+*.ckpt
+*.pb
+*.tflite
+*.pt
+*.pth
+*.bin
+*.onnx
+
+# Compiled model artifacts
+*.pbtxt
+*.npy
+*.npz
+*.joblib
+*.pkl
+
+# Video files
+**/vid/*.mp4
+
+# System-specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Backup / temp files
+*~
+*.swp
+*.bak
+*.tmp
