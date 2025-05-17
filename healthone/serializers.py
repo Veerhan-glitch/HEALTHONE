@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from healthone.backend.models import Test, Lab, Appointment
-from healthone.backend.models1.hospital_models import Department, Hospital, Doctor, DoctorAvailability, DoctorPerformance
+from healthone.backend.models1.hospital_models import Department, Hospital, Doctor, DoctorAvailability, DoctorPerformance, Patient_Appointment
 
 class TestSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,7 +52,7 @@ class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Doctor
         fields = [
-            'name', 'photo', 'position', 'specialization', 'experience',
+            'id','name', 'photo', 'position', 'specialization', 'experience',
             'gender', 'consultation_fee', 'video_consultation_fee',
             'hospital', 'department', 'availability'
         ]
@@ -78,3 +78,8 @@ class DoctorPerformanceDetailSerializer(serializers.ModelSerializer):
     def get_data(self, obj):
         performances = obj.performance.all()
         return [{"x": p.year, "y": p.consultations} for p in performances]
+    
+class Patient_AppointmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Patient_Appointment
+        fields = ['doctor', 'patient_name', 'phone', 'email', 'address', 'date', 'time_slot', 'consultation_type']    

@@ -1,12 +1,13 @@
 from django.http import JsonResponse
 from django.shortcuts import render
-from ..models1.hospital_models import Department, Hospital, Doctor, DoctorAvailability, DoctorPerformance
-import json
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import status
+from ..models1.hospital_models import Department, Hospital, Doctor, DoctorAvailability, DoctorPerformance
+import json
 from healthone.serializers import (
     DepartmentSerializer, HospitalSerializer, DoctorSerializer,
-    DoctorPerformanceDetailSerializer
+    DoctorPerformanceDetailSerializer, Patient_AppointmentSerializer
 )
 
 def index(request):
@@ -58,3 +59,12 @@ class DoctorPerformanceView(APIView):
         doctors = Doctor.objects.prefetch_related('performance').all()
         serializer = DoctorPerformanceDetailSerializer(doctors, many=True)
         return Response(serializer.data)
+    
+
+class patient_AppointmentCreateView(APIView):
+    def post(self, request):
+        serializer = Patient_AppointmentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    

@@ -45,3 +45,18 @@ class DoctorPerformance(models.Model):
 
     def __str__(self):
         return f"{self.doctor.name} - {self.year}: {self.consultations}"
+    
+
+class Patient_Appointment(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    patient_name = models.CharField(max_length=200)
+    phone = models.CharField(max_length=15)
+    email = models.EmailField()
+    address = models.TextField()
+    date = models.DateField()
+    time_slot = models.CharField(max_length=50)
+    consultation_type = models.CharField(max_length=20, choices=[('in-person', 'In-Person'), ('video', 'Video')])
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.patient_name} with {self.doctor.name} on {self.date}"    

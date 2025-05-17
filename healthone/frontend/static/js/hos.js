@@ -26,7 +26,7 @@ backBtn.addEventListener('click', () => {
 });
 
 async function showHospitals() {
-    mainContent.innerHTML = '';
+    mainContent.innerHTML = '<p>Loading...</p>';
     backBtn.style.display = 'none';
     navigationState = 'hospitals';
 
@@ -35,6 +35,7 @@ async function showHospitals() {
         if (!response.ok) throw new Error(`Failed to fetch hospitals: ${response.status}`);
         const hospitals = await response.json();
 
+        mainContent.innerHTML = '';
         hospitals.forEach(hospital => {
             const hospitalDiv = document.createElement('div');
             hospitalDiv.className = 'hospital';
@@ -85,7 +86,7 @@ function showMapPopup(latitude, longitude, name) {
     const map = L.map('popupMap').setView([latitude, longitude], 15);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
     L.marker([latitude, longitude]).addTo(map).bindPopup(name).openPopup();
@@ -104,7 +105,7 @@ function showMapPopup(latitude, longitude, name) {
 }
 
 async function showDepartmentsForHospital(hospitalName) {
-    mainContent.innerHTML = '';
+    mainContent.innerHTML = '<p>Loading...</p>';
     backBtn.style.display = 'block';
     navigationState = 'hospital_departments';
 
@@ -113,6 +114,7 @@ async function showDepartmentsForHospital(hospitalName) {
         if (!response.ok) throw new Error(`Failed to fetch departments for ${hospitalName}: ${response.status}`);
         const departments = await response.json();
         
+        mainContent.innerHTML = '';
         const headerText = document.createElement('h2');
         headerText.textContent = `Departments at ${hospitalName}`;
         headerText.style.width = '100%';
@@ -139,7 +141,7 @@ async function showDepartmentsForHospital(hospitalName) {
 }
 
 async function showDepartments() {
-    mainContent.innerHTML = '';
+    mainContent.innerHTML = '<p>Loading...</p>';
     backBtn.style.display = 'none';
     navigationState = 'departments';
 
@@ -148,6 +150,7 @@ async function showDepartments() {
         if (!response.ok) throw new Error(`Failed to fetch departments: ${response.status}`);
         const departments = await response.json();
         
+        mainContent.innerHTML = '';
         departments.forEach(department => {
             const departmentDiv = document.createElement('div');
             departmentDiv.className = 'department';
@@ -162,7 +165,7 @@ async function showDepartments() {
 }
 
 async function showHospitalsForDepartment(departmentName) {
-    mainContent.innerHTML = '';
+    mainContent.innerHTML = '<p>Loading...</p>';
     backBtn.style.display = 'block';
     navigationState = 'department_hospitals';
 
@@ -171,6 +174,7 @@ async function showHospitalsForDepartment(departmentName) {
         if (!response.ok) throw new Error(`Failed to fetch hospitals for ${departmentName}: ${response.status}`);
         const hospitals = await response.json();
 
+        mainContent.innerHTML = '';
         const headerText = document.createElement('h2');
         headerText.textContent = `Hospitals with ${departmentName}`;
         headerText.style.width = '100%';
@@ -215,7 +219,7 @@ async function showHospitalsForDepartment(departmentName) {
 }
 
 async function showDoctors(hospitalName, departmentName) {
-    mainContent.innerHTML = '';
+    mainContent.innerHTML = '<p>Loading...</p>';
     backBtn.style.display = 'block';
     navigationState = 'doctors';
 
@@ -224,6 +228,7 @@ async function showDoctors(hospitalName, departmentName) {
         if (!response.ok) throw new Error(`Failed to fetch doctors for ${hospitalName}, ${departmentName}: ${response.status}`);
         const doctors = await response.json();
         
+        mainContent.innerHTML = '';
         const doctorList = document.createElement('div');
         doctorList.className = 'doctor-list';
         
@@ -261,6 +266,19 @@ async function showDoctors(hospitalName, departmentName) {
     }
 }
 
+// Function to get CSRF token from cookies
+function getCsrfToken() {
+    const name = 'csrftoken';
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        const [key, value] = cookie.trim().split('=');
+        if (key === name) {
+            return value;
+        }
+    }
+    return null;
+}
+
 async function showAppointmentModal(doctorName) {
     try {
         const response = await fetch(`/api/doctors/?name=${encodeURIComponent(doctorName)}`);
@@ -286,7 +304,7 @@ async function showAppointmentModal(doctorName) {
 
         modal.innerHTML = `
             <div class="modal-content">
-                <span class="close">&times;</span>
+                <span class="close">×</span>
                 <h2>Book Appointment with ${doctor.name}</h2>
                 
                 <div class="calendar">
@@ -319,10 +337,10 @@ async function showAppointmentModal(doctorName) {
                 </div>
 
                 <form id="appointment-form" class="appointment-form">
-                    <input type="text" placeholder="Full Name" required>
-                    <input type="tel" placeholder="Phone Number" required pattern="[0-9]{10}">
-                    <input type="email" placeholder="Email" required>
-                    <textarea placeholder="Address" required></textarea>
+                    <input type="text" name="patient_name" placeholder="Full Name" required>
+                    <input type="tel" name="phone" placeholder="Phone Number" required pattern="[0-9]{10}">
+                    <input type="email" name="email" placeholder="Email" required>
+                    <textarea name="address" placeholder="Address" required></textarea>
                     <button type="submit" class="submit-appointment">Confirm Booking</button>
                 </form>
             </div>
@@ -350,10 +368,53 @@ async function showAppointmentModal(doctorName) {
         });
 
         const form = modal.querySelector('#appointment-form');
-        form.onsubmit = (e) => {
+        form.onsubmit = async (e) => {
             e.preventDefault();
-            alert('Appointment booked successfully!');
-            modal.remove();
+            const formData = new FormData(form);
+            const selectedTimeSlot = document.querySelector('.time-slot.selected');
+            const selectedConsultationType = document.querySelector('.consultation-type.active');
+
+            if (!selectedTimeSlot) {
+                alert('Please select a time slot.');
+                return;
+            }
+            if (!selectedConsultationType) {
+                alert('Please select a consultation type.');
+                return;
+            }
+
+            const data = {
+                doctor: doctor.id,
+                patient_name: formData.get('patient_name'),
+                phone: formData.get('phone'),
+                email: formData.get('email'),
+                address: formData.get('address'),
+                date: document.getElementById('appointment-date').value,
+                time_slot: selectedTimeSlot.textContent,
+                consultation_type: selectedConsultationType.dataset.type
+            };
+
+            try {
+                const response = await fetch('/api/patientappointments/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken()
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Failed to book appointment: ${JSON.stringify(errorData)}`);
+                }
+
+                alert('Appointment booked successfully!');
+                modal.remove();
+            } catch (error) {
+                console.error('Booking error:', error);
+                alert(`Failed to book appointment: ${error.message}`);
+            }
         };
     } catch (error) {
         console.error(`Error in appointment modal for ${doctorName}:`, error);
@@ -361,4 +422,5 @@ async function showAppointmentModal(doctorName) {
     }
 }
 
+// Initialize the application
 showHospitals();
