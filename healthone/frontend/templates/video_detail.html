@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Hour Medical - Video Consultations</title>
+    <link rel="stylesheet" href="/static/css/video_detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-heartbeat logo-icon"></i>
+                <h1>Golden Hour <span>Medical</span></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#featured-video">Featured Video</a></li>
+                    <li><a href="#emergency">Emergency Call</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2>Emergency Medical <span>Video Consultation</span></h2>
+                <p>Get immediate video assistance from medical professionals during critical golden hour situations.</p>
+                <div class="hero-buttons">
+                    <a href="#emergency" class="btn btn-primary">Start Emergency Call</a>
+                    <a href="#featured-video" class="btn btn-secondary">Watch Guide</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="featured-video" class="featured-video">
+        <div class="container">
+            <h2>Understanding the Golden Hour</h2>
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <h1>{{ video.title }}</h1>
+
+                    {% if presigned_url %}
+                      <video width="640" height="360" controls>
+                        <source src="{{ presigned_url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                      </video>
+                    {% else %}
+                      <p>No video available.</p>
+                    {% endif %}
+                    
+                </div>
+                
+                <div class="video-description">
+                    <h3>Critical First Response Guide</h3>
+                    <p>Learn the essential steps to take during the critical "Golden Hour" - the time period immediately following a traumatic injury when medical treatment is most effective.</p>
+                    <ul class="video-highlights">
+                        <li><i class="fas fa-check"></i> Understanding time-critical conditions</li>
+                        <li><i class="fas fa-check"></i> Basic life support techniques</li>
+                        <li><i class="fas fa-check"></i> When to call emergency services</li>
+                        <li><i class="fas fa-check"></i> Preparing for medical response</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="emergency" class="emergency-call">
+        <div class="container">
+            <h2>Emergency Video Consultation</h2>
+            <div class="call-options">
+                <div class="call-card">
+                    <i class="fas fa-video"></i>
+                    <h3>Start Instant Consultation</h3>
+                    <p>Connect immediately with an available medical professional via Google Meet.</p>
+                    <button class="btn btn-primary start-meet">Start Emergency Call</button>
+                </div>
+                <div class="call-card">
+                    <i class="fas fa-phone-alt"></i>
+                    <h3>Emergency Numbers</h3>
+                    <p>Contact Number: <strong>7417707828</strong></p>
+                    <button class="btn btn-secondary">View All Numbers</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>Golden Hour Medical</h3>
+                    <p>Providing critical emergency response resources and immediate video consultations.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#featured-video">Featured Video</a></li>
+                        <li><a href="#emergency">Emergency Call</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Emergency Contact</h3>
+                    <p><i class="fas fa-phone"></i> Emergency: 911</p>
+                    <p><i class="fas fa-envelope"></i> support@goldenhour.med</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Golden Hour Medical. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/video_detail.js"></script>
+</body>
+</html>

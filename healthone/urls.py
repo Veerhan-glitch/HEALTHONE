@@ -1,28 +1,20 @@
-"""
-URL configuration for healthone project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.contrib import admin
 from django.urls import path
-from django.conf import settings
-from django.conf.urls.static import static
-from . import views  
+from . import views
+from django.contrib import admin
+from healthone.backend.MLmodels.askagain import diagnosis_view, diagnosis_step
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('lab/', views.lab, name='lab'),
     path('hos/', views.hos, name='hos'),
-    ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('bot/', views.bot, name='bot'),
+    path('api/tests/', views.TestList.as_view(), name='test-list'),
+    path('api/labs/', views.LabList.as_view(), name='lab-list'),
+    path('api/appointments/', views.AppointmentCreate.as_view(), name='appointment-create'),
+    path('ml_predict/', views.ml_predict, name='ml_predict'),
+    path('bert_predict/', views.bert_predict, name='bert_predict'),
+    path('diagnosis/', diagnosis_view, name='diagnosis'),
+    path('diagnosis_step/', diagnosis_step, name='diagnosis_step'),
+    path('video_detail/<str:title>/', views.video_detail, name='video_detail'), # for video page
+]

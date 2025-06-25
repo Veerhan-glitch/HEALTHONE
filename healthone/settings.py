@@ -11,7 +11,14 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
+
+FILEBASE_ACCESS_KEY = os.getenv('FILEBASE_ACCESS_KEY')
+FILEBASE_SECRET_KEY = os.getenv('FILEBASE_SECRET_KEY')
+FILEBASE_BUCKET_NAME = os.getenv('FILEBASE_BUCKET_NAME')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+6rw0mc6i8=lhc5*-e)puwi9bb-6w4b-4jr3o4de138a2p*j!x'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -38,7 +45,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'healthone.backend',
+    'storages',
 ]
+
+DEFAULT_FILE_STORAGE = 'healthone.backend.backendstorages.filebase_storage.FilebaseStorage'
+AWS_ACCESS_KEY_ID = FILEBASE_ACCESS_KEY
+AWS_SECRET_ACCESS_KEY = FILEBASE_SECRET_KEY
+AWS_STORAGE_BUCKET_NAME = FILEBASE_BUCKET_NAME
+AWS_S3_ENDPOINT_URL = 'https://s3.filebase.com'
+AWS_S3_ADDRESSING_STYLE = 'path'  # Filebase requires path-style addressing
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -79,8 +96,12 @@ WSGI_APPLICATION = 'healthone.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'healthone_db',
+        'USER': 'admin',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
