@@ -3,31 +3,31 @@ According to the World Health Organization, 83% of preventable deaths occur due 
 
 Key Features:
 
-Built using React and JavaScript
-
-Intuitive UI for:
-    Booking appointments
-    Requesting specialist referrals
-    Ordering lab tests and medications
-    Managing patient dashboards
-
-Backend Infrastructure
-    Developed with Python, Django, and Django REST Framework
-    RESTful API design with JSON integration
-    Secure authentication and authorization for data protection
-
-Database Design
-    PostgreSQL for robust relational data management
+    Built using React and JavaScript
     
-Features:
-    Normalized schema
-    Foreign key constraints, indexing, joins for efficient queries
-    Transactional views to ensure ACID properties
-
-Emergency Response Module
-    Integrated vector database (FAISS) with LLM for:
-    Real-time condition identification from chat inputs
-Smart emergency tips (e.g., aspirin recommendation for chest pain)
+    Intuitive UI for:
+        Booking appointments
+        Requesting specialist referrals
+        Ordering lab tests and medications
+        Managing patient dashboards
+    
+    Backend Infrastructure
+        Developed with Python, Django, and Django REST Framework
+        RESTful API design with JSON integration
+        Secure authentication and authorization for data protection
+    
+    Database Design
+        PostgreSQL for robust relational data management
+        
+    Features:
+        Normalized schema
+        Foreign key constraints, indexing, joins for efficient queries
+        Transactional views to ensure ACID properties
+    
+    Emergency Response Module
+        Integrated vector database (FAISS) with LLM for:
+        Real-time condition identification from chat inputs
+    Smart emergency tips (e.g., aspirin recommendation for chest pain)
 
 Video Demonstation:
 
