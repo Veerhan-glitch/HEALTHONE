@@ -31,6 +31,7 @@ Key Features:
 
 Video Demonstation:
 
+[![](https://img.youtube.com/vi/_rnNnmTE7Uw/0.jpg)](https://www.youtube.com/watch?v=_rnNnmTE7Uw)
 
 
 #inital setup
