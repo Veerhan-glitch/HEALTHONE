@@ -31,7 +31,7 @@ videoPlaceholder.addEventListener('click', () => {
     const playButton = videoPlaceholder.querySelector('.play-btn');
 
     // Set the YouTube embed URL with autoplay
-    iframe.src = 'https://www.youtube.com/results?search_query=tum+jaise+chutiyo+ka+sahara+hai+dosto+';
+    iframe.src = 'https://www.youtube.com
     iframe.style.display = 'block';
     
     // Hide the placeholder elements
