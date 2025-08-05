@@ -31,7 +31,11 @@ Key Features:
 
 Video Demonstation:
 
-[![](https://img.youtube.com/vi/_rnNnmTE7Uw/0.jpg)](https://www.youtube.com/watch?v=_rnNnmTE7Uw)
+
+https://github.com/user-attachments/assets/96fb49e3-18b2-43e1-a9e2-19009f32f500
+
+
+
 
 
 #inital setup
